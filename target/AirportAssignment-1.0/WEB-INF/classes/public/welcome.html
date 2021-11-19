@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Airports & Runways</title>
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script>
+       $(document).ready(function () {
+            $('#myTable').hide();
+            $("#submit").click( function fun() {
+                $('#myTable').show();
+                var countryName = document.forms["myForm"]["countryName"].value;
+                var countryCode = document.forms["myForm"]["countryCode"].value;
+                if (countryCode == ""&& countryName == "") {
+                    $('#myTable').hide();
+                    var countryTable = document.getElementById("myTable");
+                    countryTable.innerHTML = "";
+                    document.getElementById('errors').innerHTML = "*Enter any one of the field*";
+                    return false;
+                }
+                if (countryCode != "" && countryCode.length != 2) {
+                    $('#myTable').hide();
+                    var countryTable = document.getElementById("myTable");
+                    countryTable.innerHTML = "";
+                    document.getElementById('errors').innerHTML = "*Country code should be 2 letters*";
+                    return false;
+                }
+
+                var theUrl = 'http://localhost:8080/api/runway?countryName=' + countryName + '&countryCode=' + countryCode;
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', theUrl, true);
+                xhr.send();
+                xhr.onreadystatechange = processRequest;
+
+                function processRequest(e) {
+                    myTable.innerHTML = "";
+                    var countryTable1 = document.getElementById("myTable");
+                    countryTable1.innerHTML += '<thead style="color : blue"><tr><th>Country code</th><th>Country Name</th><th>Airport Name</th><th>Airport Ident</th><th>Runway length_ft</th>' +
+                        '<th>Runway width_ft</th><th>Runway Surface</th><th>Runway Lighted</th><th>Runway Open/Closed</th></tr></thead>'
+                    var respons1 = JSON.parse(xhr.responseText);
+                    if (xhr.status == 200) {
+                        for (var k in respons1) {
+                            countryTable1.innerHTML += '<tbody><tr><th>' + respons1[k].countryCode + '</th>' +
+                                '<th>' + respons1[k].countryName + '</th>' +
+                                '<th>' + respons1[k].airportName + '</th>' +
+                                '<th>' + respons1[k].airportIdent + '</th>' +
+                                '<th>' + respons1[k].lengthFt + '</th>' +
+                                '<th>' + respons1[k].widthFt + '</th>' +
+                                '<th>' + respons1[k].surface + '</th>' +
+                                '<th>' + respons1[k].lighted + '</th>' +
+                                '<th>' + respons1[k].closed + '</th></tr></tbody>';
+                        }
+                        document.getElementById('errors').innerHTML = "";
+                    } else {
+                        var countryTable = document.getElementById("myTable");
+                        countryTable.innerHTML = "";
+                        document.getElementById('errors').innerHTML = "*Record not found for this code/name*";
+                        return false;
+                    }
+                }
+            });
+
+           $("#submit1").click( function () {
+               $('#myTable').show();
+
+               document.forms["myForm"]["countryName"].value = "";
+               document.forms["myForm"]["countryCode"].value = "";
+               var theUrl = 'http://localhost:8080/api/topCountryWithMoreAirports';
+               var xhr = new XMLHttpRequest();
+               xhr.open('GET', theUrl, true);
+               xhr.send();
+               xhr.onreadystatechange = processRequest;
+
+               function processRequest(e) {
+                   myTable.innerHTML = "";
+                   var countrys = document.getElementById("myTable");
+                   countrys.innerHTML += '<thead style="color : blue"><tr><th>Country Name</th><th>Number of Airports</th></tr></thead>'
+                   const respons1 = JSON.parse(xhr.responseText);
+                   if (xhr.status == 200) {
+                       for (const key in respons1) {
+                           countrys.innerHTML += '<tbody><tr><th>' + key + '</th>' +
+                               '<th>' + respons1[key] + '</th></tr></tbody>';
+                       }
+                       document.getElementById('errors').innerHTML = "";
+                   } else {
+                       var countrys1 = document.getElementById("myTable");
+                       countrys1.innerHTML = "";
+                       document.getElementById('errors').innerHTML = "*Record not found*";
+                       return false;
+                   }
+               }
+           });
+        });
+
+    </script>
+</head>
+<body>
+<center>
+    <b>Airports and Runways information</b>
+    <br><br>
+    <br>
+    <form name="myForm">
+        Enter the country code :
+        <input type="text" name="countryCode" />
+        <br><br> (or) <br><br>
+        Enter the country name :
+        <input type="text" name="countryName"/>
+        <br><br>
+        <input type="button" id="submit" value="Submit" align="centre"/>
+        <br><br>
+        <input type="button" id="submit1" value="Top 10 countries with highest number of airports" />
+    </form>
+
+    <center>
+        <br><br>
+        <table border="1" id="myTable" class="display" style="width:100%">
+        </table>
+
+        <div id="errors">
+        </div>
+
+
+    </center>
+</center>
+
+</body>
+</html>
