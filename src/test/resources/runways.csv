@@ -1,0 +1,5 @@
+"id","airport_ref","airport_ident","length_ft","width_ft","surface","lighted","closed","le_ident","le_latitude_deg","le_longitude_deg","le_elevation_ft","le_heading_degT","le_displaced_threshold_ft","he_ident","he_latitude_deg","he_longitude_deg","he_elevation_ft","he_heading_degT","he_displaced_threshold_ft"
+237924,2513,"EHAM",6627,148,"ASP",1,0,"04",52.3004,4.78348,-13,41,,"22",52.314,4.80302,-14,221,
+237925,2513,"EHAM",11283,148,"ASP",1,0,"06",52.2879,4.73402,-11,58,820,"24",52.3046,4.77752,-12,238,
+236617,26618,"VOMM",12001,148,"ASP",1,0,"07",12.9841,80.153,40,69,,"25",12.996,80.1844,52,249,
+236618,26618,"VOMM",6708,148,"PEM",1,0,"12",13.0019,80.1658,30,117.6,,"30",12.9934,80.1825,43,297.6,787
