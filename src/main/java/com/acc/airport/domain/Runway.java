@@ -2,8 +2,10 @@ package com.acc.airport.domain;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class Runway {
 
     @CsvBindByName

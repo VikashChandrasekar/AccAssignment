@@ -41,6 +41,12 @@ public class AirportService {
     public List<Airport> airports;
     public List<Runway> runways;
 
+    public AirportService(List<Country> countries, List<Airport> airports, List<Runway> runways) {
+        this.countries = countries;
+        this.airports = airports;
+        this.runways = runways;
+    }
+
     /**
      *
      * @param countryName the country name
@@ -50,7 +56,7 @@ public class AirportService {
      */
     public List<Result> getRunwayByCountry(String countryName, String countryCode) throws AirportServiceException {
         Set<Country> countrySet = getCountries(countryName, countryCode);
-        List<Result> results = getAirports(countrySet);
+        List<Result> results = getResults(countrySet);
         Validator.validate(results);
         return results;
     }
@@ -81,7 +87,7 @@ public class AirportService {
      * @param countrySet set of country.
      * @return Result - list of countries with airport and runway information.
      */
-    private List<Result> getAirports(Set<Country> countrySet) {
+    private List<Result> getResults(Set<Country> countrySet) {
         LOGGER.info("Mapping the airports and runways");
         List<Result> results = new ArrayList<>();
         countrySet.forEach(country -> airports.forEach(airport -> {
@@ -111,17 +117,18 @@ public class AirportService {
      * @return the Map, contains list of 10 countries with highest number of airports
      */
     public Map<String, Long> getTopCountryWithMoreAirports() {
-        Map<String, Long> highestAirport = new HashMap<>();
+        Map<String, Long> countriesWithNoOfAirportMap = new HashMap<>();
         countries.forEach(country -> {
             long noOfAirport = 0L;
             for (Airport airport : airports) {
                 if(country.getCode().equalsIgnoreCase(airport.getIso_country())) {
-                    highestAirport.put(country.getName(), noOfAirport++);
+                    noOfAirport = noOfAirport + 1;
+                    countriesWithNoOfAirportMap.put(country.getName(), noOfAirport);
                 }
             }
         });
         LOGGER.info("Sorting of the airports");
-        return highestAirport.entrySet().stream()
+        return countriesWithNoOfAirportMap.entrySet().stream()
                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                .limit(10)
                .collect(Collectors.toMap(

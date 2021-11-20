@@ -4,6 +4,7 @@ import com.acc.airport.domain.Result;
 import com.acc.airport.exception.AirportServiceException;
 import com.acc.airport.service.AirportService;
 
+import com.acc.airport.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,7 @@ public class AirportController {
                                    @RequestParam(value = "countryCode", required = false) final String countryCode)
         throws AirportServiceException {
         LOGGER.info("Retrieving the runway information");
+        Validator.validateParam(countryName, countryCode);
         return airportService.getRunwayByCountry(countryName, countryCode);
     }
 

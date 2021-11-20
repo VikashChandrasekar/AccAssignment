@@ -30,7 +30,7 @@ public class DataConfig {
     }
 
     @Bean
-    public void mapCountryValues() throws AirportServiceException {
+    public void mapDataValues() throws AirportServiceException {
         try {
             File countryFile = ResourceUtils.getFile("classpath:countries.csv");
             File airportFile = ResourceUtils.getFile("classpath:airports.csv");
