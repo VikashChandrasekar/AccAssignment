@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.powermock.api.easymock.PowerMock;
 
-public class DataConfigTest {
+public class DataConfigurationTest {
 
     private AirportService mockAirportService;
 
@@ -18,7 +18,7 @@ public class DataConfigTest {
 
     @Test
     public void mapDataConfigTest() throws AirportServiceException {
-        get().mapDataValues();
+        new DataConfiguration(mockAirportService).retrieveDataFromCSV();
         Assert.assertNotNull(mockAirportService.countries);
         Assert.assertNotNull(mockAirportService.airports);
         Assert.assertNotNull(mockAirportService.runways);
@@ -28,8 +28,5 @@ public class DataConfigTest {
         Assert.assertEquals(2513, mockAirportService.runways.get(0).getAirport_ref());
     }
 
-    private DataConfig get() {
-        return new DataConfig(mockAirportService);
-    }
 }
 

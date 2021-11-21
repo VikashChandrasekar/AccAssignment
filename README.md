@@ -16,3 +16,24 @@ Bonus: Support retrieving the information given a partial/fuzzy country code/nam
 - Publish the source code into GitHub (using your own personal account) and share it with us.
 
 **_Disclaimer: The data files in this repo have been extracted from https://openflights.org/data.html. Accenture claims no ownership or responsibility to this data or its usage._**
+
+##How to run this application
+- This is a springboot application, so please start the **_"AirportServiceApplication.java"_** main class.
+- There are two ways to access this application
+    - Through Postman by entering the below get() endpoints
+        - (e.g.) http://localhost:8080/api/runwayWithCode?countryCode=NL
+        - (e.g.) http://localhost:8080/api/runwayWithName?countryName=Netherlands
+        - (e.g.) http://localhost:8080/api/topCountryWithMoreAirports
+        
+                        (or)            
+
+    - Through frontend by clicking on http://localhost:8080/welcome.html URL which will land in the minimal
+      front end page.
+      
+
+##Note
+- The partial/fuzzy logic implemented in the country name endpoint. 
+  - (e.g) countryName=Ind then it will return the data's of Indonesia, India, British Indian Ocean Territory.
+
+      
+    

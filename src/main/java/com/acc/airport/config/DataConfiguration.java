@@ -8,7 +8,6 @@ import com.acc.airport.service.AirportService;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ResourceUtils;
@@ -20,17 +19,22 @@ import java.io.FileReader;
 import java.util.List;
 
 @Configuration
-public class DataConfig {
+public class DataConfiguration {
 
     private final AirportService airportService;
 
-    @Autowired
-    public DataConfig(AirportService airportService) {
+    public DataConfiguration(AirportService airportService) {
         this.airportService = airportService;
     }
 
+
+    /**This method reads the csv file (using opencsv library) from the resource path and stores the data
+     * in (In memory) lists.
+     *
+     * @throws AirportServiceException the exception
+     */
     @Bean
-    public void mapDataValues() throws AirportServiceException {
+    public void retrieveDataFromCSV() throws AirportServiceException {
         try {
             File countryFile = ResourceUtils.getFile("classpath:countries.csv");
             File airportFile = ResourceUtils.getFile("classpath:airports.csv");

@@ -19,41 +19,47 @@ import java.util.Map;
 public class AirportControllerTest {
 
     private AirportService mockAirportService;
+    private AirportController airportController;
 
     @Before
     public void setUp() {
         mockAirportService = PowerMock.createMock(AirportService.class);
+        airportController = new AirportController(mockAirportService);
     }
 
     @Test
     public void getRunwaysWithCountryNameTest() throws AirportServiceException {
-        EasyMock.expect(mockAirportService.getRunwayByCountry("Netherlands", null)).andReturn(createResult());
+        EasyMock.expect(mockAirportService.getRunwayByCountry(null, "Netherlands")).andReturn(createResult());
         PowerMock.replayAll();
-        List<Result> resultList = get().getRunways("Netherlands", null);
+        List<Result> resultList = airportController.getRunwaysByCountryName("Netherlands");
         PowerMock.verifyAll();
         Assert.assertNotNull(resultList);
     }
 
     @Test
     public void getRunwaysWithCountryCodeTest() throws AirportServiceException {
-        EasyMock.expect(mockAirportService.getRunwayByCountry( null,"NL")).andReturn(createResult());
+        EasyMock.expect(mockAirportService.getRunwayByCountry("NL", null)).andReturn(createResult());
         PowerMock.replayAll();
-        List<Result> resultList = get().getRunways(null, "NL");
+        List<Result> resultList = airportController.getRunwaysByCountryCode("NL");
         PowerMock.verifyAll();
         Assert.assertNotNull(resultList);
     }
 
     @Test(expected = InvalidParameterException.class)
-    public void getRunwaysWithRunwayNotFoundTest() throws AirportServiceException {
-        EasyMock.expect(mockAirportService.getRunwayByCountry( null,null)).andReturn(null);
-        get().getRunways(null, null);
+    public void getRunwaysWithCountryCodeNotFoundTest() throws AirportServiceException {
+        airportController.getRunwaysByCountryCode(null);
+    }
+
+    @Test(expected = InvalidParameterException.class)
+    public void getRunwaysWithCountryNameNotFoundTest() throws AirportServiceException {
+        airportController.getRunwaysByCountryName(null);
     }
 
     @Test
     public void getCountriesWithMoreAirportTest() {
         EasyMock.expect(mockAirportService.getTopCountryWithMoreAirports()).andReturn(createTop10Countries());
         PowerMock.replayAll();
-        Map<String, Long> top10Countries = get().getTopCountryWithMoreAirports();
+        Map<String, Long> top10Countries = airportController.getTopCountryWithMoreAirports();
         Assert.assertNotNull(top10Countries);
     }
 
@@ -70,21 +76,18 @@ public class AirportControllerTest {
     }
 
     private Map<String, Long> createTop10Countries() {
-        Map<String, Long> map = new HashMap<>();
-        map.put("America", 200L);
-        map.put("Germany", 150L);
-        map.put("Belgium", 125L);
-        map.put("England", 110L);
-        map.put("Chile", 100L);
-        map.put("China", 85L);
-        map.put("Canada", 70L);
-        map.put("Japan", 75L);
-        map.put("Spain", 60L);
-        map.put("India", 40L);
-        return map;
+        Map<String, Long> countryMap = new HashMap<>();
+        countryMap.put("America", 200L);
+        countryMap.put("Germany", 150L);
+        countryMap.put("Belgium", 125L);
+        countryMap.put("England", 110L);
+        countryMap.put("Chile", 100L);
+        countryMap.put("China", 85L);
+        countryMap.put("Canada", 70L);
+        countryMap.put("Japan", 75L);
+        countryMap.put("Spain", 60L);
+        countryMap.put("India", 40L);
+        return countryMap;
     }
 
-    public AirportController get() {
-        return new AirportController(mockAirportService);
-    }
 }

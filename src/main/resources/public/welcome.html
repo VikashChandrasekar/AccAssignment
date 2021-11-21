@@ -11,7 +11,7 @@
                 $('#myTable').show();
                 var countryName = document.forms["myForm"]["countryName"].value;
                 var countryCode = document.forms["myForm"]["countryCode"].value;
-                if (countryCode == ""&& countryName == "") {
+                if ((countryCode == "" && countryName == "") || (countryCode != "" && countryName != "")) {
                     $('#myTable').hide();
                     var countryTable = document.getElementById("myTable");
                     countryTable.innerHTML = "";
@@ -25,8 +25,13 @@
                     document.getElementById('errors').innerHTML = "*Country code should be 2 letters*";
                     return false;
                 }
-
-                var theUrl = 'http://localhost:8080/api/runway?countryName=' + countryName + '&countryCode=' + countryCode;
+                var theUrl = "";
+                if (countryCode != "") {
+                    theUrl = 'http://localhost:8080/api/runwayWithCode?countryCode=' + countryCode;
+                }
+                if (countryName != "") {
+                    theUrl = 'http://localhost:8080/api/runwayWithName?countryName=' + countryName;
+                }
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', theUrl, true);
                 xhr.send();

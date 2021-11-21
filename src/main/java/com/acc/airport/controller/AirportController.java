@@ -28,16 +28,40 @@ public class AirportController {
         this.airportService = airportService;
     }
 
-
-    @GetMapping(value = "/runway")
-    public List<Result> getRunways(@RequestParam(value = "countryName", required = false) final String countryName,
-                                   @RequestParam(value = "countryCode", required = false) final String countryCode)
+    /**This endpoint will return list contains the country, airport, runways information for the given
+     * country code.
+     *
+     * @param countryCode the country code
+     * @return the list of Result
+     * @throws AirportServiceException
+     */
+    @GetMapping(value = "/runwayWithCode")
+    public List<Result> getRunwaysByCountryCode(@RequestParam(value = "countryCode") final String countryCode)
         throws AirportServiceException {
-        LOGGER.info("Retrieving the runway information");
-        Validator.validateParam(countryName, countryCode);
-        return airportService.getRunwayByCountry(countryName, countryCode);
+        LOGGER.info("Retrieving the runway information from country Code : " +countryCode);
+        Validator.validateCountryCode(countryCode);
+        return airportService.getRunwayByCountry(countryCode, null);
     }
 
+    /**This endpoint will return list contains the country, airport, runways information for the given
+     * country name.
+     *
+     * @param countryName the country name
+     * @return the list of Result
+     * @throws AirportServiceException
+     */
+    @GetMapping(value = "/runwayWithName")
+    public List<Result> getRunwaysByCountryName(@RequestParam(value = "countryName") final String countryName)
+        throws AirportServiceException {
+        LOGGER.info("Retrieving the runway information from country name : " + countryName);
+        Validator.validateCountryName(countryName);
+        return airportService.getRunwayByCountry(null, countryName);
+    }
+
+    /**This end point returns the top 10 countries with more airport.
+     *
+     * @return map of <String, Long>
+     */
     @GetMapping(value = "/topCountryWithMoreAirports")
     public Map<String, Long> getTopCountryWithMoreAirports() {
         LOGGER.info("Retrieving the top 10 countries with more airports");

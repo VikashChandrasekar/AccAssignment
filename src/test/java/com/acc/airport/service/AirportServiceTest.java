@@ -5,6 +5,7 @@ import com.acc.airport.domain.Result;
 import com.acc.airport.exception.AirportServiceException;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -13,10 +14,16 @@ import java.util.Map;
 
 public class AirportServiceTest {
 
+    private AirportService airportService;
+
+    @Before
+    public void setUp() {
+        airportService = new AirportService(TestStub.createCountry(), TestStub.createAirport(), TestStub.createRunway());
+    }
 
     @Test
     public void getRunwayByCountryWithCountryNameTest() throws AirportServiceException {
-        List<Result> resultList = get().getRunwayByCountry("Netherlands", null);
+        List<Result> resultList = airportService.getRunwayByCountry(null,"Netherlands");
         Assert.assertNotNull(resultList);
         Assert.assertEquals("Netherlands", resultList.get(0).getCountryName());
         Assert.assertEquals("NL", resultList.get(0).getCountryCode());
@@ -27,7 +34,7 @@ public class AirportServiceTest {
 
     @Test
     public void getRunwayByCountryWithCountryCodeTest() throws AirportServiceException {
-        List<Result> resultList = get().getRunwayByCountry(null, "IN");
+        List<Result> resultList = airportService.getRunwayByCountry("IN", null);
         Assert.assertNotNull(resultList);
         Assert.assertEquals("India", resultList.get(0).getCountryName());
         Assert.assertEquals("IN", resultList.get(0).getCountryCode());
@@ -38,19 +45,15 @@ public class AirportServiceTest {
 
     @Test(expected = ResponseStatusException.class)
     public void getRunwayByCountryWithEmptyValuesTest() throws AirportServiceException {
-        get().getRunwayByCountry(null, null);
+        airportService.getRunwayByCountry(null, null);
     }
 
     @Test
     public void getTopCountryWithMoreAirportsTest() {
-        Map<String, Long> map = get().getTopCountryWithMoreAirports();
+        Map<String, Long> map = airportService.getTopCountryWithMoreAirports();
         Assert.assertNotNull(map);
         Assert.assertEquals(2, Long.parseLong(String.valueOf(map.get("Netherlands"))));
         Assert.assertEquals(1, Long.parseLong(String.valueOf(map.get("India"))));
     }
 
-
-    private AirportService get() {
-        return new AirportService(TestStub.createCountry(), TestStub.createAirport(), TestStub.createRunway());
-    }
 }

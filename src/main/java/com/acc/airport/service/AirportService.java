@@ -47,42 +47,42 @@ public class AirportService {
         this.runways = runways;
     }
 
-    /**
+    /**This method iterates the country list for the given param, then iterate the airport and runways list using
+     * country code or name and will form a list of Result which contains country, airport and runway information for
+     * the given param.
      *
-     * @param countryName the country name
      * @param countryCode the country code
+     * @param countryName the country name
      * @return List of Runways
      * @throws AirportServiceException the exception
      */
-    public List<Result> getRunwayByCountry(String countryName, String countryCode) throws AirportServiceException {
-        Set<Country> countrySet = getCountries(countryName, countryCode);
+    public List<Result> getRunwayByCountry(String countryCode, String countryName) throws AirportServiceException {
+        Set<Country> countrySet = getCountries(countryCode, countryName);
         List<Result> results = getResults(countrySet);
         Validator.validate(results);
         return results;
     }
 
-    /**
+    /**This method iterates the country list and fetch the correct country for the given param
      *
      * @param countryName the country name
      * @param countryCode the country code
      * @return list of country
      */
-    private Set<Country> getCountries(String countryName, String countryCode) {
+    private Set<Country> getCountries(String countryCode, String countryName) {
         LOGGER.info("Fetching the country details");
         Set<Country> countrySet = new HashSet<>();
         countries.forEach(entry -> {
-            if (StringUtils.isNotBlank(countryCode) && countryCode.equalsIgnoreCase(entry.getCode())) {
-                countrySet.add(entry);
-            }
-            if (StringUtils.isNotBlank(countryName) && entry.getName().toUpperCase()
-                                                            .contains(countryName.toUpperCase())) {
+            if ((StringUtils.isNotBlank(countryCode) && countryCode.equalsIgnoreCase(entry.getCode())) ||
+                (StringUtils.isNotBlank(countryName) && entry.getName().toUpperCase().contains(countryName.toUpperCase()))) {
                 countrySet.add(entry);
             }
         });
         return countrySet;
     }
 
-    /**
+    /**This method forms a list of Result which contains country, airport and runways informations for a particular
+     * country code or name.
      *
      * @param countrySet set of country.
      * @return Result - list of countries with airport and runway information.
@@ -112,9 +112,9 @@ public class AirportService {
         return results;
     }
 
-    /**
+    /**This method maps the top 10 countries with the more number of airports.
      *
-     * @return the Map, contains list of 10 countries with highest number of airports
+     * @return the Map of <String, Long>
      */
     public Map<String, Long> getTopCountryWithMoreAirports() {
         Map<String, Long> countriesWithNoOfAirportMap = new HashMap<>();
